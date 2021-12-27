@@ -6589,17 +6589,15 @@ const End = [
 function lowerCaseFirstLetter(sentence) {
   return sentence.charAt(0).toLowerCase() + sentence.slice(1);
 }
+function upperCaseFirstLetter(sentence) {
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+}
 function choice(sentences) {
   let length = sentences.length;
   return sentences[Math.floor(Math.random() * length)];
 }
 function increase_paragraph(paragraph) {
-  if (paragraph[paragraph.length - 1] === " ") {
-    paragraph = paragraph.slice(0, -2);
-  }
-  return (
-    "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + paragraph + ".\n"
-  );
+  return "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + paragraph;
 }
 
 function get_quote(json_length = 1596, start_length = 10, end_length = 8) {
@@ -6621,15 +6619,16 @@ function get_discourse(topic, length = 59, seperate = 31) {
     let rand_num = Math.floor(Math.random() * length);
     sentence = Discourse[rand_num];
     sentence = sentence.replace(RegExp("topic", "g"), topic);
-
+    sentence = upperCaseFirstLetter(sentence);
     if (rand_num >= seperate) {
       is_comma = true;
     }
     return sentence;
   }
   let rand_num = Math.floor(Math.random() * seperate);
-  sentence = lowerCaseFirstLetter(Discourse[rand_num]);
+  sentence = Discourse[rand_num];
   sentence = sentence.replace(RegExp("topic", "g"), topic);
+  sentence = lowerCaseFirstLetter(sentence);
 
   is_comma = false;
   return sentence;
@@ -6640,7 +6639,7 @@ function generateEssay() {
   let essay = [];
   let paragraph = "";
   let essay_length = 0;
-  while (essay_length < 8000) {
+  while (essay_length < 8000 || is_comma) {
     let rand_num = Math.random();
     if (rand_num < 0.2 && paragraph.length > 600 && !is_comma) {
       paragraph = increase_paragraph(paragraph);
